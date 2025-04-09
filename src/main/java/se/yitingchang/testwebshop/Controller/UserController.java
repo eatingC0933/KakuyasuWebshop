@@ -44,11 +44,10 @@ public class UserController {
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
-       // model.addAttribute("user", new User());
-        return "user_register"; // Matches your Thymeleaf HTML file
+        return "user_register";
     }
 
-    // Handle registration
+   
     @PostMapping("/register")
     public String registerUser(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
         try {
@@ -62,21 +61,16 @@ public class UserController {
     }
 
 
- /*   @GetMapping("/home")
-     public String showHomePage(Model model) {
-        return "home"; // Load home.html from templates folder
-    }*/
 
 
-
-    // Show all users (admin feature)
+   
     @GetMapping("/list")
     public String listUsers(Model model) {
         model.addAttribute("users", userService.findAll());
         return "user-list"; // Points to user-list.html
     }
 
-    // Find user by ID
+    
     @GetMapping("/{id}")
     public String getUserById(@PathVariable int id, Model model) {
         Optional<User> user = userService.findById(id);
@@ -89,7 +83,7 @@ public class UserController {
         }
     }
 
-    // Delete user (admin feature)
+  
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable int id) {
         userService.delete(id);
