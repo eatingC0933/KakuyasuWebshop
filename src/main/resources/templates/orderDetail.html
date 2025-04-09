@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Order Detail List</title>
+</head>
+<body>
+<h1>OrderDetail List</h1>
+<table border="1">
+  <thead>
+  <tr>
+    <th>OrderDetailID</th>
+    <th>Customer Name</th>
+    <th>Product</th>
+    <th>Quantity</th>
+    <th>Price</th>
+    <th>CreateTime</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products}">
+    <td th:text="${product.id}"></td>
+    <td th:text="${product.name}"></td>
+    <td th:text="${product.price}"></td>
+    <td th:text="${product.category.name}"></td>
+  </tr>
+  </tbody>
+</table>
+<br><br>
+<table>
+  <tr>
+    <th>User ID</th>
+    <th>Order ID</th>
+    <th>Product ID</th>
+    <th>Quantity</th>
+  </tr>
+  <tr th:each="orderDetail : ${orderDetails}">
+    <td th:text="${orderDetail.id}"></td>
+    <td th:text="${orderDetail.order.id}"></td>
+    <td th:text="${orderDetail.product.id}"></td>
+    <td th:text="${orderDetail.quantity}"></td>
+  </tr>
+</table>
+<h3>Add Order Detail</h3>
+<form action="/orderDetail" th:object="${orderDetail}" method="post">
+  <label for="order">Order ID:</label>
+  <input type="text" id="order" th:field="*{order.id}" />
+  <br>
+  <br>
+  <label for="product">Product ID:</label>
+  <input type="text" id="product" th:field="*{product.id}" />
+  <br>
+  <br>
+  <label for="quantity">Quantity:</label>
+  <input type="text" id="quantity" th:field="*{product.quantity}" />
+  <button type="submit">Save</button>
+</form>
+</body>
+</html>

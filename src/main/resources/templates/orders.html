@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Orders </title>
+</head>
+<body>
+
+<h2>Orders </h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>Order Date</th>
+        <th>Total Price</th>
+        <th>User</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.orderID}"></td>
+        <td th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${order.totalPrice}"></td>
+        <td th:text="${order.user.userName}"></td>
+    </tr>
+    <tr th:if="${orders.isEmpty()}">
+        <td colspan="4">No orders available</td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/home">Back to Home</a>
+
+</body>
+</html>
