@@ -54,7 +54,7 @@ public class SecurityConfig {
     @Bean // Authentication
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
-                .username("Yiting")
+                .username("Chang")
                 .password("123")
                 .roles("USER")
                 .build();
