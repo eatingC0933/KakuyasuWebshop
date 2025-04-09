@@ -19,13 +19,13 @@ public class UserService {
 
 
     public void register(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode password
+        user.setPassword(passwordEncoder.encode(user.getPassword())); 
         userRepo.save(user);
     }
 
     public User login(String userName, String password) {
         User user = userRepo.findByUserName(userName);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) { // Correct password check
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) { 
             return user;
         }
         return null;
@@ -45,13 +45,13 @@ public class UserService {
         if (user.getId() != 0) {
             Optional<User> existingUser = userRepo.findById(user.getId());
             if (existingUser.isPresent()) {
-                // Only encode if password is changed
+                
                 if (!user.getPassword().equals(existingUser.get().getPassword())) {
                     user.setPassword(passwordEncoder.encode(user.getPassword()));
                 }
             }
         } else {
-            // New user, encode password
+            
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userRepo.save(user);
