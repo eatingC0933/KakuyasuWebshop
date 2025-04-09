@@ -1,10 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Category Management</title>
 </head>
 <body>
-$END$
+<h2>Categories</h2>
+
+<!-- Success Message -->
+<p th:if="${message}" style="color:green;" th:text="${message}"></p>
+
+<!-- Display Categories -->
+<ul>
+    <li th:each="category : ${categories}">
+        <span th:text="'ID: ' + ${category.categoryId} + ' - Name: ' + ${category.categoryName}"></span>
+    </li>
+</ul>
+
+<a th:href="@{/admin/addNewProduct}">Add New Product</a><br><br>
+<a href="/home">Back to Home</a>
+
+
 </body>
 </html>
