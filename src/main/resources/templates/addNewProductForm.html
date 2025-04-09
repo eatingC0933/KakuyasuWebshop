@@ -1,10 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Add New Product</title>
 </head>
 <body>
-$END$
+
+<h2>Add New Product</h2>
+
+
+<form method="post" th:action="@{/admin/addNewProduct}" >
+    <label>Product Name:</label><br>
+    <input type="text" name="productName"  required><br><br>
+
+    <label>Price:</label><br>
+    <input type="number" name="price" step="0.01" required><br><br>
+
+    <label>Category:</label><br>
+    <select name="category">
+        <option value="">-- Select a Category --</option>
+        <option th:each="category : ${categories}"
+                th:value="${category.categoryId}"
+                th:text="${category.categoryName}">
+        </option>
+    </select><br><br>
+
+
+    <label>Uploaded Image:</label><br>
+    <img th:if="${imageUrl != null}" th:src="@{${imageUrl}}" alt="Uploaded" width="100"><br>
+    <input type="hidden" name="imageUrl" th:value="${imageUrl}"><br><br>
+
+    <button type="submit">Add Product</button>
+</form>
+
+    <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+
+
+<br>
+
+
+
+<a href="/admin/category">Add New Category</a><br><br>
+<a href="/products">All Products</a><br><br>
+<a href="/admin/updateProduct">Update Product</a><br><br>
+
+<br><br>
+
+<a href="/home">Back to Home</a>
+
 </body>
 </html>
