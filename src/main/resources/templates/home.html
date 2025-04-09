@@ -1,10 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+
+<title>Webshop</title>
+  <style>
+
+    .table-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    table {
+      width: 80%;
+      max-width: 1000px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      word-wrap: break-word;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    img {
+      max-width: 100px;
+      height: auto;
+    }
+
+    td input[type="number"] {
+      width: 60px;
+    }
+
+    td button {
+      padding: 5px 10px;
+    }
+
+  </style>
+
+
 </head>
 <body>
-$END$
+<header>
+  <nav>
+
+    <a th:if="${user != null}" th:href="@{/cart(userId=${user.id})}">Shopping Cart</a>
+
+
+    <a th:href="@{/logout}" sec:authorize="isAuthenticated()">
+      <button type="submit">Logout</button>
+    </a>
+    <a th:href="@{/login}" sec:authorize="!isAuthenticated()">
+      <button type="submit">Login</button>
+    </a><br><br>
+    <form th:action="@{/search}" method="get">
+      <input type="text" name="product" placeholder="Search Product">
+      <button type="submit">Search</button>
+    </form>
+
+
+  </nav>
+</header>
+<main>
+  <h1>Welcome to the Kakuyasu Shop</h1>
+
+  <table >
+    <thead>
+    <tr>
+      <th style="width: 120px;">Image</th>
+      <th style="width: 50px;">ID</th>
+      <th style="width: 200px;">Name</th>
+      <th style="width: 100px;">Price</th>
+      <th style="width: 150px;">Category</th>
+      <th style="width: 100px;">Quantity</th>
+      <th style="width: 100px;">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+      <td>
+        <img th:src="@{${product.imagePath}}" alt="Product Image" width="150" />
+      </td>
+      <td th:text="${product.productId}"></td>
+      <td th:text="${product.productName}"></td>
+      <td th:text="${product.price}"></td>
+      <td th:text="${product.category != null ? product.category.categoryName : 'No Category'}"></td>
+
+      <td>
+        <form th:action="@{/cart/add}" method="post">
+          <input type="hidden" name="productId" th:value="${product.productId}">
+          <input type="number" name="quantity" value="0" min="0">
+          <input type="hidden" name="userId" th:value="${user != null ? user.id : 0}">
+          <td><button type="submit">Add to Cart</button></td>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+
+</main>
+<script>
+  document.getElementById("category").addEventListener("change", function() {
+    if (this.value) {
+      window.location.href = "/products/by-category/" + this.value;
+
+    }
+  });
+</script>
+
+
+
+<!-- Show 'Add Product' only if the user is an ADMIN -->
+<div sec:authorize="hasRole('ADMIN')">
+  <a th:href="@{/admin/upload}">Add New Product</a><br><br>
+  <a th:href="@{/admin/updateProduct}">Update Product</a><br><br>
+  <a th:href="@{/admin/category}">Add New Category</a><br><br>
+  <a th:href="@{/admin/orders}">Link to orders</a><br><br>
+
+</div>
 </body>
 </html>
