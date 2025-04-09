@@ -1,10 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Shopping Cart</title>
+    <script>
+        function updateTotal(cartId, price) {
+            var quantity = document.getElementById('quantity-' + cartId).value;
+            var total = price * quantity;
+            document.getElementById('total-' + cartId).innerText = total.toFixed(2);
+            updateTotalPrice();
+            updateCart(cartId, quantity);
+        }
+
+        function updateTotalPrice() {
+            var totalPrice = 0;
+            var totals = document.getElementsByClassName('total');
+            for (var i = 0; i < totals.length; i++) {
+                totalPrice += parseFloat(totals[i].innerText);
+            }
+            document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+        }
+
+        function updateCart(cartId, quantity) {
+            var userId = document.getElementById('userId').value;
+            fetch('/cart/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'cartId=' + cartId + '&quantity=' + quantity + '&userId=' + userId
+            });
+        }
+    </script>
 </head>
 <body>
-$END$
+
+<h2>Hi, <span th:text="${user.userName}"></span>!</h2>
+<p>Welcome to your Shopping Cart</p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cartItem : ${cartItems}">
+        <td th:text="${cartItem.product.productName}"></td>
+        <td th:text="${cartItem.price}"></td>
+        <td>
+            <!-- Update Quantity Form -->
+            <form th:action="@{/cart/update}" method="post">
+                <input type="hidden" name="cartId" th:value="${cartItem.cartId}">
+                <input type="hidden" name="userId" th:value="${user.id}">
+                <input type="number" name="quantity" th:value="${cartItem.quantity}" min="1">
+                <button type="submit">Update</button>
+            </form>
+        </td>
+        <!-- Fix total calculation -->
+        <td th:text="${cartItem.quantity * cartItem.price}"></td>
+
+
+        <td>
+            <form th:action="@{/cart/remove}" method="post">
+                <input type="hidden" name="cartId" th:value="${cartItem.cartId}">
+                <input type="hidden" name="userId" th:value="${user.id}">
+                <button type="submit">Remove</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p>Total Price: <span id="totalPrice" th:text="${totalPrice}"></span></p>
+
+<form th:action="@{/cart/clear}" method="post">
+    <input type="hidden" name="userId" th:value="${user.id}" id="userId">
+    <button type="submit">Clear Cart</button>
+</form><br><br>
+
+<form th:action="@{/cart/checkout}" method="post">
+    <input type="hidden" name="userId" th:value="${user.id}">
+    <button type="submit">Check out</button>
+</form>
+<br><br>
+<a href="/home">Continue Shopping</a>
 </body>
 </html>
